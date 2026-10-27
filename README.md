@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/ppolydoras/scrollback/actions/workflows/tests.yml"><img src="https://github.com/ppolydoras/scrollback/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
-  <img src="https://img.shields.io/badge/python-3.9%2B-1A1015?labelColor=33232B" alt="Python 3.9 or newer">
+  <img src="https://img.shields.io/badge/python-3.10%2B-1A1015?labelColor=33232B" alt="Python 3.10 or newer">
   <img src="https://img.shields.io/badge/dependencies-none-1A1015?labelColor=33232B" alt="No dependencies">
   <img src="https://img.shields.io/badge/runs-on%20your%20computer-1A1015?labelColor=33232B" alt="Runs on your computer">
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-1A1015?labelColor=33232B" alt="MIT licence"></a>
@@ -41,7 +41,7 @@ Posts without a picture get the colour of their era (see the table below) with t
 
 ## Install
 
-You need Python 3.9 or newer. Scrollback uses only the Python standard library: no pip packages, no Node, no build step.
+You need Python 3.10 or newer, which Ubuntu has shipped since 22.04. Scrollback uses only the Python standard library: no pip packages, no Node, no build step.
 
 ```bash
 git clone https://github.com/ppolydoras/scrollback.git

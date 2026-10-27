@@ -17,8 +17,8 @@ if [[ -z "$PY" ]]; then
   echo "python3 was not found. Install it with: sudo apt install python3" >&2
   exit 1
 fi
-"$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)' || {
-  echo "Scrollback needs Python 3.9 or newer." >&2; exit 1; }
+"$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' || {
+  echo "Scrollback needs Python 3.10 or newer." >&2; exit 1; }
 
 CONF_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/scrollback"
 APPS_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/applications"

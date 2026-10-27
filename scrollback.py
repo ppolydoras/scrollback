@@ -12,8 +12,8 @@ import sys
 import threading
 import webbrowser
 
-if sys.version_info < (3, 9):
-    sys.exit("Scrollback needs Python 3.9 or newer.")
+if sys.version_info < (3, 10):
+    sys.exit("Scrollback needs Python 3.10 or newer.")
 
 from scrollback_core import __version__, config, db  # noqa: E402
 from scrollback_core.server import App, serve  # noqa: E402
