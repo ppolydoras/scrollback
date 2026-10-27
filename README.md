@@ -38,7 +38,7 @@
 
 Scrollback is shaped like a social media app. Full-screen posts that never run out, a like button, a daily streak. The difference is what's in the posts: every one is a real event from history, taken from Wikipedia's "On this day" pages. It runs on your own computer for one person. It learns which periods and subjects you stay on, quizzes you on what you read and reads posts aloud with a voice that runs on your laptop.
 
-**[Try the browser demo](https://ppolydoras.github.io/scrollback/)** before you install anything. It has a few hundred events, with this week's "On this day" posts, and keeps your likes and progress in your browser. It is rebuilt from Wikipedia every Monday.
+**[Try the browser demo](https://ppolydoras.github.io/scrollback/)** before you install anything. It has a few hundred events, including this week's "On this day" posts. Your likes and progress stay in your browser. GitHub rebuilds it from Wikipedia every Monday.
 
 ## What it looks like
 
