@@ -1172,7 +1172,7 @@
     }
 
     if (tts.demo) {
-      fs.append(h("p", { class: "hint", text: "In this demo your browser's own voice reads the posts. The installed app uses Piper, a neural voice that runs on your computer." }));
+      fs.append(h("p", { class: "hint", text: "In this demo a voice from your browser or operating system reads the posts. Voices marked online send the text to their provider. The installed app uses Piper, a neural voice that runs on your computer." }));
       return fs;
     }
 

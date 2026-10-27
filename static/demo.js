@@ -290,17 +290,22 @@
 
   // ------------------------------------------------------------------ speech
   const synth = window.speechSynthesis || null;
-  const englishVoices = () => (synth ? synth.getVoices().filter((v) => /^en/i.test(v.lang)) : []);
+  // Voices on the device first. Online voices (such as Chrome's "Google"
+  // voices) send the text to their provider, so they are only a fallback.
+  const englishVoices = () => (synth ? synth.getVoices().filter((v) => /^en/i.test(v.lang))
+    .sort((a, b) => Number(b.localService) - Number(a.localService)) : []);
   function pickVoice(name) {
     const voices = englishVoices();
-    return voices.find((v) => v.name === name) || voices.find((v) => /en[-_]GB/i.test(v.lang)) || voices[0] || null;
+    const gb = (v) => /en[-_]GB/i.test(v.lang);
+    return voices.find((v) => v.name === name) || voices.find((v) => v.localService && gb(v))
+      || voices.find((v) => v.localService) || voices.find(gb) || voices[0] || null;
   }
   function ttsStatus() {
     const voices = englishVoices();
     const voice = pickVoice(setting("tts_voice"));
     return { available: !!(synth && voices.length), demo: true, python: "browser",
       reason: synth ? "This browser has no English voice installed." : "This browser cannot speak.",
-      voices: voices.map((v) => ({ key: v.name, label: `${v.name} (${v.lang})` })), voice: voice ? voice.name : null,
+      voices: voices.map((v) => ({ key: v.name, label: `${v.name} (${v.lang}${v.localService ? "" : ", online"})` })), voice: voice ? voice.name : null,
       speed: Number(setting("tts_speed")) || 1, worker_running: false, last_error: null, download: {} };
   }
 

@@ -188,7 +188,7 @@ The front end is one HTML file, one stylesheet and one script, with no framework
 - There are no accounts, no analytics and no tracking. Your reading history is a SQLite file in `~/.local/share/scrollback`.
 - Scrollback contacts Wikipedia for text and your browser loads pictures from Wikimedia. Hugging Face is contacted only when you download a voice. A model provider is contacted only if you turn on the storyteller.
 - Requests that change data need a custom header, so other websites open in your browser cannot send them.
-- The browser demo runs entirely in your browser. GitHub Pages serves its files and Wikimedia serves the pictures. Nothing you do there is sent anywhere.
+- The browser demo runs in your browser. GitHub Pages serves its files and Wikimedia serves the pictures. Your likes and progress are not sent anywhere. Listening uses your browser's speech voices: it prefers voices on your device, but some browsers only offer online voices, which send the post text to their provider.
 
 ## Configuration
 
