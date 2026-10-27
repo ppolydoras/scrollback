@@ -90,7 +90,7 @@ docker run -d --name scrollback --restart unless-stopped \
   ghcr.io/ppolydoras/scrollback
 ```
 
-Then open http://localhost:8765. Your history and voices live in the `scrollback` volume. There is also a [compose.yaml](compose.yaml).
+Then open http://localhost:8765. Your history and voices live in the `scrollback` volume. There is also a [compose.yaml](compose.yaml). If port 8765 is taken, for example by Scrollback installed without Docker, change the first number: `-p 127.0.0.1:8766:8765`.
 
 To use it from other devices on your network, publish the port without `127.0.0.1:` and list the names you reach the server by, such as `-e SCROLLBACK_ALLOWED_HOSTS=homeserver.local`. Scrollback has no login, so do this only on a network you trust.
 
