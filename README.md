@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/ppolydoras/scrollback/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/ppolydoras/scrollback/tests.yml?branch=main&style=for-the-badge&label=tests&labelColor=33232B&logo=githubactions&logoColor=white" alt="Tests"></a>
-  <a href="https://github.com/ppolydoras/scrollback/commits/main"><img src="https://img.shields.io/github/last-commit/ppolydoras/scrollback?style=for-the-badge&labelColor=33232B&color=4F4E2A" alt="Last commit"></a>
+  <a href="https://github.com/ppolydoras/scrollback/releases/latest"><img src="https://img.shields.io/github/v/release/ppolydoras/scrollback?style=for-the-badge&label=version&labelColor=33232B&color=4F4E2A" alt="Latest release"></a>
   <a href="https://github.com/ppolydoras/scrollback/stargazers"><img src="https://img.shields.io/github/stars/ppolydoras/scrollback?style=for-the-badge&labelColor=33232B&color=F2C14E&logo=github&logoColor=white" alt="GitHub stars"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-8E2440?style=for-the-badge&labelColor=33232B" alt="MIT licence"></a>
   <br>
