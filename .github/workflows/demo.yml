@@ -1,0 +1,53 @@
+name: demo
+
+# Builds the browser demo from recent Wikipedia events and publishes it on
+# GitHub Pages. It runs every Monday so "On this day" covers the coming week.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "static/**"
+      - "scrollback_core/**"
+      - "docs/social-preview.png"
+      - ".github/workflows/demo.yml"
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - id: pages
+        uses: actions/configure-pages@v5
+      - name: Build the demo
+        run: python scrollback.py --build-demo site --demo-url "${{ steps.pages.outputs.base_url }}/"
+        env:
+          SCROLLBACK_CONTACT: ${{ github.server_url }}/${{ github.repository }}
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

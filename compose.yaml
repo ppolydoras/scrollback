@@ -1,0 +1,20 @@
+# docker compose up -d, then open http://localhost:8765
+services:
+  scrollback:
+    image: ghcr.io/ppolydoras/scrollback:latest
+    container_name: scrollback
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8765:8765"   # drop 127.0.0.1: to reach it from other devices
+    volumes:
+      - scrollback:/data
+    environment:
+      # Names this server is reached by, besides localhost. Scrollback has no
+      # login, so only list names on a network you trust.
+      # SCROLLBACK_ALLOWED_HOSTS: "homeserver.local"
+      # Optional storyteller. The key stays in the environment.
+      # SCROLLBACK_LLM_PROVIDER: "anthropic"
+      # ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+
+volumes:
+  scrollback:

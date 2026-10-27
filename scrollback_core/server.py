@@ -1,9 +1,10 @@
-"""HTTP server: static files and a small JSON API. Binds to localhost only."""
+"""HTTP server: static files and a small JSON API. Binds to localhost unless told otherwise."""
 from __future__ import annotations
 
 import json
 import logging
 import mimetypes
+import os
 import re
 from datetime import date, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -171,6 +172,23 @@ def collection(which: str, offset: int) -> dict:
 ALLOWED_HOSTS = re.compile(r"^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$")
 
 
+def extra_hosts() -> set[str]:
+    """Host names allowed besides localhost, from SCROLLBACK_ALLOWED_HOSTS
+    (comma separated, * for any). For a home server reached by its own name."""
+    raw = os.environ.get("SCROLLBACK_ALLOWED_HOSTS", "")
+    return {h.strip().lower() for h in raw.split(",") if h.strip()}
+
+
+def host_allowed(host: str) -> bool:
+    if ALLOWED_HOSTS.match(host):
+        return True
+    extra = extra_hosts()
+    if "*" in extra:
+        return True
+    name = re.sub(r":\d+$", "", host.strip().lower())
+    return bool(name) and name in extra
+
+
 class Handler(BaseHTTPRequestHandler):
     app: App = None  # set by serve()
     server_version = "Scrollback"
@@ -206,7 +224,7 @@ class Handler(BaseHTTPRequestHandler):
         self._json({"error": message}, status)
 
     def _host_ok(self) -> bool:
-        return bool(ALLOWED_HOSTS.match(self.headers.get("Host", "")))
+        return host_allowed(self.headers.get("Host", ""))
 
     def _body(self) -> dict:
         length = int(self.headers.get("Content-Length") or 0)

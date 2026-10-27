@@ -282,6 +282,60 @@ class CoreTests(unittest.TestCase):
         with urllib.request.urlopen(f"http://127.0.0.1:{APP_PORT}/") as r:
             self.assertIn(b"<title>", r.read())
 
+    def test_16b_allowed_hosts(self):
+        from scrollback_core.server import host_allowed
+        old = os.environ.pop("SCROLLBACK_ALLOWED_HOSTS", None)
+        try:
+            self.assertTrue(host_allowed("localhost:8765"))
+            self.assertTrue(host_allowed("[::1]:8765"))
+            self.assertFalse(host_allowed("homeserver.local:8765"))
+            os.environ["SCROLLBACK_ALLOWED_HOSTS"] = "HomeServer.local, pi"
+            self.assertTrue(host_allowed("homeserver.local:8765"))
+            self.assertTrue(host_allowed("pi"))
+            self.assertFalse(host_allowed("evil.example"))
+            self.assertFalse(host_allowed(""))
+            os.environ["SCROLLBACK_ALLOWED_HOSTS"] = "*"
+            self.assertTrue(host_allowed("anything:1"))
+        finally:
+            os.environ.pop("SCROLLBACK_ALLOWED_HOSTS", None)
+            if old is not None:
+                os.environ["SCROLLBACK_ALLOWED_HOSTS"] = old
+
+    def test_17_demo_build(self):
+        import subprocess
+        out = Path(self.tmp.name) / "site"
+        code = ("import sys; from scrollback_core import demo_build; "
+                "print(demo_build.build_all_days(sys.argv[1], url='https://example.org/demo'))")
+        res = subprocess.run([sys.executable, "-c", code, str(out)], cwd=str(ROOT), env=os.environ.copy(),
+                             capture_output=True, text=True, check=True)
+        count = int(res.stdout.strip())
+        self.assertGreater(count, 20)
+        html = (out / "index.html").read_text()
+        self.assertLess(html.index("static/demo.js"), html.index("static/app.js"))
+        self.assertIn('content="https://example.org/demo/social-preview.png"', html)
+        self.assertNotIn('"/static/', html)
+        data = json.loads((out / "static" / "demo-data.json").read_text())
+        self.assertEqual(len(data["facts"]), count)
+        years = [f["year"] for f in data["facts"]]
+        self.assertEqual(years, sorted(years))
+        fact = next(f for f in data["facts"] if f["year"] == 1805)
+        self.assertIn("eighteen oh five", fact["speech"])
+        for name in ("app.js", "app.css", "demo.js", "icon.svg"):
+            self.assertTrue((out / "static" / name).is_file())
+        self.assertTrue(any((out / "static" / "fonts").glob("*.woff2")))
+
+    def test_18_demo_select_balances_eras(self):
+        from scrollback_core import demo_build
+        items = []
+        for era, year in (("Ancient", -200), ("Medieval", 1200), ("21st century", 2010)):
+            for k in range(40):
+                items.append({"source_key": f"{era}{k}", "extract": "x" * 200, "featured": 0, "image": None,
+                              "era": era, "year": year, "month": 1, "day": 2 + k % 20})
+        chosen = demo_build.select(items, near_days=set(), total=30, seed=1)
+        self.assertEqual(len(chosen), 30)
+        for era in ("Ancient", "Medieval", "21st century"):
+            self.assertEqual(sum(1 for c in chosen if c["era"] == era), 10)
+
 
 if __name__ == "__main__":
     unittest.main()

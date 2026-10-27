@@ -28,6 +28,8 @@ def main() -> None:
     ap.add_argument("--fetch-day", metavar="MM-DD", help="fetch one day from Wikipedia and exit")
     ap.add_argument("--download-voice", metavar="VOICE", help="download a Piper voice, such as en_GB-cori-medium")
     ap.add_argument("--tts-test", action="store_true", help="say a test sentence with Piper and exit")
+    ap.add_argument("--build-demo", metavar="DIR", help="build the browser demo site into DIR and exit")
+    ap.add_argument("--demo-url", metavar="URL", help="public address of the demo, for link previews")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args()
 
@@ -36,6 +38,13 @@ def main() -> None:
         format="%(asctime)s %(name)s %(levelname)s %(message)s",
         datefmt="%H:%M:%S",
     )
+
+    if args.build_demo:
+        from scrollback_core import demo_build
+        count = demo_build.build(args.build_demo, url=args.demo_url or demo_build.DEMO_URL)
+        print(f"Built the demo with {count} events in {args.build_demo}")
+        return
+
     db.init()
 
     if args.fetch_day:

@@ -686,7 +686,8 @@
   });
 
   // ---------------------------------------------------------------- listening (Piper)
-  const audio = $("#audio");
+  const DEMO = window.SCROLLBACK_DEMO || null;
+  const audio = (DEMO && DEMO.audio) || $("#audio");
   const player = { handsFree: false, fact: null, slide: null, status: "idle", tts: null, followTimer: null };
 
   async function ttsStatus(force = false) {
@@ -1010,7 +1011,7 @@
 
     section.replaceChildren(h("div", { class: "page" },
       h("h1", { class: "page-title", text: "Explore" }),
-      h("p", { class: "page-sub", text: "Everything Scrollback has fetched so far. Filter by era, topic or date. You can also search for a word." }),
+      h("p", { class: "page-sub", text: `${DEMO ? "Every event in this demo" : "Everything Scrollback has fetched so far"}. Filter by era, topic or date. You can also search for a word.` }),
       h("div", { class: "filters" },
         h("label", { class: "field" }, "Search", search),
         h("label", { class: "field" }, "Topic", topic),
@@ -1161,12 +1162,18 @@
           const b = ev.currentTarget;
           b.disabled = true;
           b.textContent = "Preparing the sample";
-          const a = new Audio(`/api/tts/sample.wav?voice=${encodeURIComponent(voiceSel.value)}&speed=${speedSel.value}&t=${Date.now()}`);
+          const url = `/api/tts/sample.wav?voice=${encodeURIComponent(voiceSel.value)}&speed=${speedSel.value}&t=${Date.now()}`;
+          const a = DEMO ? DEMO.makeAudio(url) : new Audio(url);
           a.addEventListener("playing", () => { b.textContent = "Playing"; });
           a.addEventListener("ended", () => { b.disabled = false; b.textContent = "Play a sample"; });
           a.addEventListener("error", () => { b.disabled = false; b.textContent = "Play a sample"; toast("The sample could not be made. Check the voice."); });
           a.play().catch(() => {});
         } })));
+    }
+
+    if (tts.demo) {
+      fs.append(h("p", { class: "hint", text: "In this demo your browser's own voice reads the posts. The installed app uses Piper, a neural voice that runs on your computer." }));
+      return fs;
     }
 
     // adding voices
@@ -1247,7 +1254,7 @@
         h("label", { class: "field" }, "Daily goal, in posts", input("daily_goal", { type: "number", min: 1, max: 500 })),
         h("label", { class: "field" }, "Show a quiz after every", input("quiz_every", { type: "number", min: 3, max: 50 })),
         h("p", { class: "hint", text: "Quizzes only ask about posts you have already read. Wrong answers come back after 20 minutes, right ones after longer and longer gaps. Hands-free listening passes over quizzes." })),
-      h("fieldset", {}, h("legend", { text: "Content" }),
+      DEMO ? null : h("fieldset", {}, h("legend", { text: "Content" }),
         h("label", { class: "field" }, "Wikipedia language code", input("language", { type: "text", maxlength: 12 })),
         lockNote("language"),
         h("p", { class: "hint", text: "en works best. Wikipedia only publishes its On this day data for some languages, such as de, fr, es, it, pt, ru and sv." }),
@@ -1255,7 +1262,7 @@
         h("label", { class: "field" }, "Your contact for Wikimedia (optional)", input("contact", { type: "text", placeholder: "you@example.com" })),
         lockNote("contact"),
         h("p", { class: "hint", text: "Wikimedia asks automated tools to say who runs them. If you fill this in, it is sent in the User-Agent header of requests to Wikipedia and nowhere else." })),
-      h("fieldset", {}, h("legend", { text: "Storyteller (optional)" }),
+      DEMO ? null : h("fieldset", {}, h("legend", { text: "Storyteller (optional)" }),
         h("p", { class: "status-line " + cls, text: line }),
         h("label", { class: "field" }, "Model provider", provider), lockNote("llm_provider"),
         h("label", { class: "field" }, "Model name", input("llm_model", { type: "text", placeholder: "claude-haiku-5-5 or llama3.1:8b" })), lockNote("llm_model"),
@@ -1263,7 +1270,7 @@
         h("p", { class: "hint", text: "The storyteller rewrites upcoming posts into short stories and writes extra quiz questions. It gets only the Wikipedia text for each post and is told not to add facts. API keys are read from the ANTHROPIC_API_KEY or OPENAI_API_KEY environment variables and are never stored by Scrollback." })),
       h("div", { class: "form-actions" },
         h("button", { class: "btn primary", type: "submit", text: "Save settings" }),
-        h("button", { class: "btn", type: "button", text: "Fetch from Wikipedia now",
+        DEMO ? null : h("button", { class: "btn", type: "button", text: "Fetch from Wikipedia now",
           onclick: () => api.post("/api/refresh").then(() => toast("Fetching started.")).catch((e) => toast(e.message)) })));
 
     form.addEventListener("submit", async (ev) => {
@@ -1289,7 +1296,9 @@
 
     section.replaceChildren(h("div", { class: "page" },
       h("h1", { class: "page-title", text: "Settings" }),
-      h("p", { class: "page-sub", text: "Scrollback runs only on this computer. Your reading history stays in a local database." }),
+      h("p", { class: "page-sub", text: DEMO
+        ? "This is the browser demo. Your likes, quizzes and progress stay in this browser only."
+        : "Scrollback runs only on this computer. Your reading history stays in a local database." }),
       form));
   }
 

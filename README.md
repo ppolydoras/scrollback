@@ -24,10 +24,11 @@
   <a href="#listen-instead-of-reading"><img src="https://img.shields.io/badge/voice-piper%2C%20on%20device-B2441B?style=for-the-badge&labelColor=33232B" alt="Voice by Piper, on device"></a>
   <a href="#configuration"><img src="https://img.shields.io/badge/storyteller-claude%20or%20ollama-4F4E2A?style=for-the-badge&labelColor=33232B&logo=anthropic&logoColor=white" alt="Optional storyteller with Claude or Ollama"></a>
   <a href="#install"><img src="https://img.shields.io/badge/platform-ubuntu-B2441B?style=for-the-badge&labelColor=33232B&logo=ubuntu&logoColor=white" alt="Made for Ubuntu"></a>
+  <a href="#with-docker"><img src="https://img.shields.io/badge/docker-amd64%20%7C%20arm64-1F4E96?style=for-the-badge&labelColor=33232B&logo=docker&logoColor=white" alt="Docker image for amd64 and arm64"></a>
 </p>
 
 <p align="center">
-  <a href="#what-it-looks-like"><img src="https://img.shields.io/badge/%E2%96%B6%20see%20it%20in%20action-B2441B?style=for-the-badge" alt="See it in action"></a>
+  <a href="https://ppolydoras.github.io/scrollback/"><img src="https://img.shields.io/badge/%E2%96%B6%20try%20it%20in%20your%20browser-B2441B?style=for-the-badge" alt="Try it in your browser"></a>
   <a href="#install"><img src="https://img.shields.io/badge/quick%20start-F2C14E?style=for-the-badge" alt="Quick start"></a>
 </p>
 
@@ -36,6 +37,8 @@
 </p>
 
 Scrollback is shaped like a social media app. Full-screen posts that never run out, a like button, a daily streak. The difference is what's in the posts: every one is a real event from history, taken from Wikipedia's "On this day" pages. It runs on your own computer for one person. It learns which periods and subjects you stay on, quizzes you on what you read and reads posts aloud with a voice that runs on your laptop.
+
+**[Try the browser demo](https://ppolydoras.github.io/scrollback/)** before you install anything. It has a few hundred events, with this week's "On this day" posts, and keeps your likes and progress in your browser. It is rebuilt from Wikipedia every Monday.
 
 ## What it looks like
 
@@ -76,6 +79,20 @@ To run it as a desktop app on Ubuntu, with a launcher in the app grid and a serv
 ```
 
 The launcher opens Scrollback in its own window when Chrome or Chromium is installed. Use `./scripts/install.sh --no-service` if you would rather start it only when you open it. Use `SCROLLBACK_PORT=9000 ./scripts/install.sh` for another port.
+
+### With Docker
+
+The image includes Piper, so you only need to pick a voice under Settings. It is built for amd64 and arm64, which covers a Raspberry Pi 4 or 5.
+
+```bash
+docker run -d --name scrollback --restart unless-stopped \
+  -p 127.0.0.1:8765:8765 -v scrollback:/data \
+  ghcr.io/ppolydoras/scrollback
+```
+
+Then open http://localhost:8765. Your history and voices live in the `scrollback` volume. There is also a [compose.yaml](compose.yaml).
+
+To use it from other devices on your network, publish the port without `127.0.0.1:` and list the names you reach the server by, such as `-e SCROLLBACK_ALLOWED_HOSTS=homeserver.local`. Scrollback has no login, so do this only on a network you trust.
 
 ## Listen instead of reading
 
@@ -162,14 +179,16 @@ The server is a single Python process with no dependencies. It serves the page a
 
 Piper runs in a separate process inside its own virtual environment. Scrollback sends it one JSON line per post and gets back a WAV file, which is cached. The worker starts the first time you listen and stops after ten idle minutes to free memory.
 
-The front end is one HTML file, one stylesheet and one script, with no framework. The whole project is about 4,900 lines, plus 600 lines of tests.
+The front end is one HTML file, one stylesheet and one script, with no framework. The whole project is about 5,600 lines, plus 700 lines of tests.
 
 ## Privacy
 
-- The server listens on 127.0.0.1 only. Nothing else on your network can reach it.
+- The server listens on 127.0.0.1 only, unless you change that. Nothing else on your network can reach it.
+- It answers only requests addressed to `localhost` (or names you add with `SCROLLBACK_ALLOWED_HOSTS`), which blocks DNS rebinding attacks from websites.
 - There are no accounts, no analytics and no tracking. Your reading history is a SQLite file in `~/.local/share/scrollback`.
 - Scrollback contacts Wikipedia for text and your browser loads pictures from Wikimedia. Hugging Face is contacted only when you download a voice. A model provider is contacted only if you turn on the storyteller.
 - Requests that change data need a custom header, so other websites open in your browser cannot send them.
+- The browser demo runs entirely in your browser. GitHub Pages serves its files and Wikimedia serves the pictures. Nothing you do there is sent anywhere.
 
 ## Configuration
 
@@ -202,6 +221,7 @@ python3 scrollback.py --port 8766        # another port
 python3 scrollback.py --no-crawl         # do not fetch from Wikipedia
 python3 scrollback.py --tts-test         # check that Piper works
 python3 scrollback.py --download-voice en_GB-alan-medium
+python3 scrollback.py --build-demo site  # build the browser demo into site/
 systemctl --user status scrollback       # is the service running?
 journalctl --user -u scrollback -f       # service logs
 ./scripts/uninstall.sh                   # remove service and launcher, keep your data
@@ -229,12 +249,14 @@ scrollback_core/
   tts_worker.py        runs inside the Piper environment
   llm.py               optional storyteller
   db.py                SQLite storage, daily progress and ranks
+  demo_build.py        builds the browser demo for GitHub Pages
 static/                the web app: HTML, CSS, JavaScript and fonts
+  demo.js              answers the app's API inside the browser, for the demo
 scripts/               install, uninstall, launcher and speech setup
 tests/                 offline tests
 ```
 
-Tested on Ubuntu. The installer uses systemd and the desktop launcher format, so it is Linux only. The app itself is plain Python, but text to speech does not work on Windows yet.
+Tested on Ubuntu. The installer uses systemd and the desktop launcher format, so it is Linux only. The app itself is plain Python, but text to speech does not work on Windows yet. The Docker image runs anywhere Docker does, including macOS and Windows.
 
 Issues and pull requests are welcome. Please run the tests before sending a change.
 
@@ -248,3 +270,5 @@ Issues and pull requests are welcome. Please run the tests before sending a chan
 ## Licence
 
 [MIT](LICENSE)
+
+<p align="center"><sub>Made by <a href="https://github.com/ppolydoras">Pavlos Polydoras</a> of <a href="https://gradient-logic.com">Gradient Logic</a>, Athens.</sub></p>

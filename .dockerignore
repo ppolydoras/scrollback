@@ -1,0 +1,11 @@
+.git
+.github
+docs
+tests
+scripts
+**/__pycache__
+*.pyc
+*.db
+*.db-wal
+*.db-shm
+site
