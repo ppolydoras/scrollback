@@ -1,23 +1,41 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/banner-dark.png">
-    <img src="docs/banner-light.png" alt="Scrollback. Scroll back through history, one full-screen post at a time." width="100%">
-  </picture>
+  <img src="docs/logo.svg" width="112" alt="Scrollback logo: a timeline in the colours of seven eras">
+</p>
+
+<h1 align="center">Scrollback</h1>
+
+<p align="center">
+  <b>Scroll back through history, one full-screen post at a time.</b><br>
+  <b>Real events from Wikipedia, in a feed that runs on your own computer.</b><br>
+  Written in Python with no dependencies. It reads posts aloud with a voice that runs on your machine.
 </p>
 
 <p align="center">
-  <a href="https://github.com/ppolydoras/scrollback/actions/workflows/tests.yml"><img src="https://github.com/ppolydoras/scrollback/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
-  <img src="https://img.shields.io/badge/python-3.10%2B-1A1015?labelColor=33232B" alt="Python 3.10 or newer">
-  <img src="https://img.shields.io/badge/dependencies-none-1A1015?labelColor=33232B" alt="No dependencies">
-  <img src="https://img.shields.io/badge/runs-on%20your%20computer-1A1015?labelColor=33232B" alt="Runs on your computer">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-1A1015?labelColor=33232B" alt="MIT licence"></a>
+  <a href="https://github.com/ppolydoras/scrollback/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/ppolydoras/scrollback/tests.yml?branch=main&style=for-the-badge&label=tests&labelColor=33232B&logo=githubactions&logoColor=white" alt="Tests"></a>
+  <a href="https://github.com/ppolydoras/scrollback/tags"><img src="https://img.shields.io/github/v/tag/ppolydoras/scrollback?style=for-the-badge&label=version&labelColor=33232B&color=4F4E2A" alt="Latest version"></a>
+  <a href="https://github.com/ppolydoras/scrollback/stargazers"><img src="https://img.shields.io/github/stars/ppolydoras/scrollback?style=for-the-badge&labelColor=33232B&color=F2C14E&logo=github&logoColor=white" alt="GitHub stars"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-8E2440?style=for-the-badge&labelColor=33232B" alt="MIT licence"></a>
+  <br>
+  <img src="https://img.shields.io/badge/python-3.10%2B-1F4E96?style=for-the-badge&labelColor=33232B&logo=python&logoColor=white" alt="Python 3.10 or newer">
+  <img src="https://img.shields.io/badge/dependencies-none-5E347E?style=for-the-badge&labelColor=33232B" alt="No dependencies">
+  <img src="https://img.shields.io/badge/data-wikipedia-0E6377?style=for-the-badge&labelColor=33232B&logo=wikipedia&logoColor=white" alt="Data from Wikipedia">
+  <img src="https://img.shields.io/badge/storage-sqlite-2C6E62?style=for-the-badge&labelColor=33232B&logo=sqlite&logoColor=white" alt="Stored in SQLite">
+  <br>
+  <a href="#listen-instead-of-reading"><img src="https://img.shields.io/badge/voice-piper%2C%20on%20device-B2441B?style=for-the-badge&labelColor=33232B" alt="Voice by Piper, on device"></a>
+  <a href="#configuration"><img src="https://img.shields.io/badge/storyteller-claude%20or%20ollama-4F4E2A?style=for-the-badge&labelColor=33232B&logo=anthropic&logoColor=white" alt="Optional storyteller with Claude or Ollama"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/platform-ubuntu-B2441B?style=for-the-badge&labelColor=33232B&logo=ubuntu&logoColor=white" alt="Made for Ubuntu"></a>
 </p>
 
-Scrollback is shaped like a social media app. Full-screen posts that never run out, a like button, a daily streak. The difference is what's in the posts: every one is a real event from history, taken from Wikipedia's "On this day" pages. It runs on your own computer for one person. It learns which periods and subjects you stay on, quizzes you on what you read and reads posts aloud with a voice that runs on your laptop.
+<p align="center">
+  <a href="#what-it-looks-like"><img src="https://img.shields.io/badge/%E2%96%B6%20see%20it%20in%20action-B2441B?style=for-the-badge" alt="See it in action"></a>
+  <a href="#install"><img src="https://img.shields.io/badge/quick%20start-F2C14E?style=for-the-badge" alt="Quick start"></a>
+</p>
 
 <p align="center">
   <img src="docs/hero.png" alt="Scrollback on a laptop and two phones: ARPANET in 1969, Eileen Collins in 1995 and the DSCOVR launch in 2015" width="100%">
 </p>
+
+Scrollback is shaped like a social media app. Full-screen posts that never run out, a like button, a daily streak. The difference is what's in the posts: every one is a real event from history, taken from Wikipedia's "On this day" pages. It runs on your own computer for one person. It learns which periods and subjects you stay on, quizzes you on what you read and reads posts aloud with a voice that runs on your laptop.
 
 ## What it looks like
 
